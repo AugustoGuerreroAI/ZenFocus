@@ -1,4 +1,5 @@
-# Zen Focus App - An App for students, made by a student 🧘
+# Zen Focus App 
+## An App for students, made by a student 🧘
 This app helps you configure deep work or study sessions, actively blocking distractions and tracking how you spend your time, allowing you to take control of your productivity.
 
 ### ✨ Key Features (The Vision)
