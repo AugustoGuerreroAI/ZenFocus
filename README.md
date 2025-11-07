@@ -10,9 +10,9 @@ Configurable Focus Sessions: Start a session by defining what you are going to s
 - **Progress Tracking:** Get a history of your sessions to know how many real hours you have invested in each subject or project.
 
 ### 🛠️ Tech Stack
-Framework: Tauri (Rust for the backend, Svelte/React/Vanilla JS for the frontend).
+**Framework:** Tauri (Rust for the backend, Svelte/React/Vanilla JS for the frontend).
 
-Languages: Rust, JavaScript, HTML, CSS
+**Languages:** Rust, JavaScript, HTML, CSS
 
 ### 🚀 Getting Started (Local Development)
 ```bash
