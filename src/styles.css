@@ -87,8 +87,8 @@ button {
   outline: none;
 }
 
-#greet-input {
-  margin-right: 5px;
+#timer-input {
+  margin-right: 10px;
 }
 
 @media (prefers-color-scheme: dark) {
