@@ -14,7 +14,7 @@ fn submit(timer: &str) -> String {
 }
 
 #[tauri::command]
-async fn start_timer(app_handle: AppHandle, duration_secs: u64) {
+async fn start_timer(app_handle: AppHandle, duration_secs: i32) {
     let state = app_handle.state::<CountdownState>();
 
     {
@@ -36,34 +36,41 @@ async fn start_timer(app_handle: AppHandle, duration_secs: u64) {
     });
 }
 
-async fn run_countdown(app_handle: AppHandle, duration_secs: u64) {
-    let mut remaining = duration_secs + 1; // +1 to include the 0 second
-
+async fn run_countdown(app_handle: AppHandle, duration_secs: i32) {
+    // Declaring the remaining in a local var and the interval between the changes of numbers
+    let mut remaining = duration_secs;
     let mut interval = time::interval(Duration::from_secs(1));
-    while remaining > 0 {
-        // Emit event to frontend with remaining time
-        app_handle.emit("timer-tick", remaining).unwrap();
-        println!("Emitting tick: {}", remaining);
 
-        if remaining == 0 {
-            break;
-        }
+    // First we check that the duration is compatible
+    if valid_duration(&remaining) {
+        while valid_duration(&remaining) {
+            interval.tick().await;
+            app_handle.emit("timer-tick", remaining).unwrap();
+            println!("number emitted: {}", remaining);
+
+            remaining -= 1;
+        } 
 
         interval.tick().await;
+        println!("Timer finished");
+        app_handle.emit("timer-done", "times up").unwrap();
 
-        remaining -= 1;
-
-    }
-    println!("Timer completed!");
-    app_handle.emit("timer-done", "times up").unwrap();
-
-    // Reset the is_running state
-    {
-        let state = app_handle.state::<CountdownState>();
-        let mut is_running = state.is_running.lock().unwrap();
-        *is_running = false;
+        // Here we reset the is_running state
+        {
+            let state = app_handle.state::<CountdownState>();
+            let mut is_running = state.is_running.lock().unwrap();
+            *is_running = false;
+        }
+    } else {
+        println!("Invalid duration: {}. Timer must be non-negative.", remaining);
+        app_handle.emit("timer-tick", "Invalid Duration").unwrap();
     }
 }
+
+fn valid_duration(r: &i32) -> bool {
+    *r >= 0
+}
+
 
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
