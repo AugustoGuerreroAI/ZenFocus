@@ -5,29 +5,28 @@ const { listen } = window.__TAURI__.event;
  * This converts total seconds into a format String MM::SS
  */
 function formatTime(totalSeconds) {
+
   // this calculates the hours
   const hours = Math.floor((totalSeconds/60) / 60);
-
-  let minutes = 0;
-
-  if (hours != 0) {
-    minutes = Math.floor(totalSeconds/60) % 60;
-  } else {
-    minutes = Math.floor(totalSeconds/60);
-  }
+  const formattedHours = String(hours).padStart(2, '0');
 
   // this calculates the rest of the seconds
   const seconds = totalSeconds % 60;
-
-  const formattedHours = String(hours).padStart(2, '0');
-  const formattedMinutes = String(minutes).padStart(2, '0');
   const formattedSeconds = String(seconds).padStart(2, '0');
 
-  if (hours == 0) {
-    return `${formattedMinutes}:${formattedSeconds}`;
-  } else {
+  let minutes = 0;
+  let formattedMinutes = "";
+
+  if (hours != 0) {
+    minutes = Math.floor(totalSeconds/60) % 60;
+    formattedMinutes = String(minutes).padStart(2, '0');
     return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+  } else {
+    minutes = Math.floor(totalSeconds/60);
+    formattedMinutes = String(minutes).padStart(2, '0');
+    return `${formattedMinutes}:${formattedSeconds}`;
   }
+
 }
 
 let timerInputEl;
