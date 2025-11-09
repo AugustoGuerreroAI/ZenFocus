@@ -8,8 +8,13 @@ function formatTime(totalSeconds) {
   // this calculates the hours
   const hours = Math.floor((totalSeconds/60) / 60);
 
-  // this calculates the minutes
-  const minutes = Math.floor(totalSeconds/60) % 60;
+  let minutes = 0;
+
+  if (hours != 0) {
+    minutes = Math.floor(totalSeconds/60) % 60;
+  } else {
+    minutes = Math.floor(totalSeconds/60);
+  }
 
   // this calculates the rest of the seconds
   const seconds = totalSeconds % 60;
@@ -18,8 +23,11 @@ function formatTime(totalSeconds) {
   const formattedMinutes = String(minutes).padStart(2, '0');
   const formattedSeconds = String(seconds).padStart(2, '0');
 
-  // returns the string combined
-  return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+  if (hours == 0) {
+    return `${formattedMinutes}:${formattedSeconds}`;
+  } else {
+    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+  }
 }
 
 let timerInputEl;
