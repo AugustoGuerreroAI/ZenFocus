@@ -18,7 +18,7 @@ async fn start_timer(app_handle: AppHandle, duration_secs: i32) {
     let state = app_handle.state::<CountdownState>();
 
     {
-        // Pedimos la llave (lock) para ver el valor
+        // Request the key (lock) to see the real value.
         let mut is_running = state.is_running.lock().unwrap();
 
         if *is_running {
