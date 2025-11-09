@@ -1,74 +1,15 @@
-const { invoke } = window.__TAURI__.core;
-const { listen } = window.__TAURI__.event;
+// 1. Imports the module I already created
+import { initializeTimer } from './timer.js';
 
-/**
- * This converts total seconds into a format String MM::SS
- */
-function formatTime(totalSeconds) {
-
-  // this calculates the hours
-  const hours = Math.floor((totalSeconds/60) / 60);
-  const formattedHours = String(hours).padStart(2, '0');
-
-  // this calculates the rest of the seconds
-  const seconds = totalSeconds % 60;
-  const formattedSeconds = String(seconds).padStart(2, '0');
-
-  let minutes = 0;
-  let formattedMinutes = "";
-
-  if (hours != 0) {
-    minutes = Math.floor(totalSeconds/60) % 60;
-    formattedMinutes = String(minutes).padStart(2, '0');
-    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
-  } else {
-    minutes = Math.floor(totalSeconds/60);
-    formattedMinutes = String(minutes).padStart(2, '0');
-    return `${formattedMinutes}:${formattedSeconds}`;
-  }
-
-}
-
-let timerInputEl;
-let timerMsgEl;
-let countdownEl; // Element for counter display
-
-async function startTimer() {
-  // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-  const duration = parseInt(timerInputEl.value, 10);
-  
-  if (isNaN(duration) || duration <= 0) {
-    timerMsgEl.textContent = "Please enter a valid positive number.";
-    return;
-  }
-
-  invoke("start_timer", {durationSecs: duration});
-}
-
-
-async function setupListeners() {
-  const unListenTick = await listen("timer-tick", (event) => {
-    console.log("Tick:", event.payload);
-
-    countdownEl.textContent = formatTime(event.payload);
-  });
-
-  const unListenDone = await listen("timer-done", (event) => {
-    console.log("Timer done:", event.payload);
-    timerMsgEl.textContent =  event.payload;
-    countdownEl.textContent = "Timer completed!";
-  });
-}
-
+// 2. Waits until DOM is ready
 window.addEventListener("DOMContentLoaded", () => {
-  timerInputEl = document.querySelector("#timer-input");
-  timerMsgEl = document.querySelector("#timer-msg");
-  countdownEl = document.querySelector("#countdown");
+  
+  // 3. Finds the elements
+  const timerForm = document.querySelector("#start-timer");
+  const timerInputEl = document.querySelector("#timer-input");
+  const timerMsgEl = document.querySelector("#timer-msg");
+  const countdownEl = document.querySelector("#countdown");
 
-  document.querySelector("#start-timer").addEventListener("submit", (e) => {
-    e.preventDefault();
-    startTimer();
-  });
-
-  setupListeners();
+  // 4. Calls the initializer and sends everything, so the logic goes to timer.js 
+  initializeTimer(timerForm, timerInputEl, timerMsgEl, countdownEl);
 });
