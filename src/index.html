@@ -10,16 +10,24 @@
 
   <body>
     <main class="container">
-      <h1 id="countdown"></h1>
+        <h1 id="countdown"></h1>
       
-      <h1>Welcome to zenFocus</h1>
+        <h1>Welcome to zenFocus</h1>
 
-      <form class="row" id="start-timer">
-        <input id="timer-input" placeholder="Enter time in seconds..." />
-        <button type="submit">Start Timer</button>
-      </form>
-      <p id="timer-msg"></p>
-
+        <form class="row" id="start-timer">
+            <input id="timer-input" placeholder="Enter time in seconds..." />
+            <button id="timer-start" type="submit">Start Timer</button>
+        </form>
+        <p id="timer-msg"></p>
     </main>
+
+        <div class="testing-purposes">
+            <div class="circular-progress">
+                <span class="progress-value">0%</span>
+            </div>
+
+            <!-- This is for JavaScript-->
+             <script src="js/script.js"></script>
+        </div>
   </body>
 </html>

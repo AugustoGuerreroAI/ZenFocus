@@ -3,6 +3,7 @@ const { invoke } = window.__TAURI__.core;
 const { listen } = window.__TAURI__.event;
 
 
+
 /**
  * This converts total seconds into a format String MM::SS
  */
@@ -19,7 +20,7 @@ function formatTime(totalSeconds) {
   let minutes = 0;
   let formattedMinutes = "";
 
-  // This depends on how it's displayed the timer, wheter you have hours or minutes. Just a UI thing
+  // This depends on how it's displayed the timer, wether you have hours or minutes. Just an UI thing
   if (hours != 0) {
     minutes = Math.floor(totalSeconds/60) % 60;
     formattedMinutes = String(minutes).padStart(2, '0');
