@@ -2,6 +2,7 @@
 const { invoke } = window.__TAURI__.core;
 const { listen } = window.__TAURI__.event;
 
+import { setUpListenerTimer } from "./js/timerListener.js"
 
 
 /**
@@ -55,6 +56,8 @@ async function startTimer(timerInputEl, timerMsgEl) {
     timerMsgEl.textContent = "Please enter a valid positive number.";
     return;
   }
+
+  setUpListenerTimer(duration);
 
   invoke("start_timer", {durationSecs: duration});
 }
