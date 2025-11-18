@@ -1,13 +1,14 @@
 use tauri::{AppHandle, Emitter, Manager};
 use tokio::time::{self, Duration};
+
+use tokio::task::JoinHandle; 
 use std::sync::Mutex;
 
 
 struct CountdownState {
-    is_running: Mutex<bool>,
+    current_timer: Mutex<Option<JoinHandle<()>>>,
 }
 
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
 fn submit(timer: &str) -> String {
     format!("You have set the timer as: {}", timer)
@@ -17,23 +18,34 @@ fn submit(timer: &str) -> String {
 async fn start_timer(app_handle: AppHandle, duration_secs: i32) {
     let state = app_handle.state::<CountdownState>();
 
-    {
-        // Request the key (lock) to see the real value.
-        let mut is_running = state.is_running.lock().unwrap();
+    // We block the mutex in order to measure it as a safer way
+    // It returns a MutexGuard that acts as a mutable temporary reference for the internal value of Mutex (That is Option<JoinHandle()>>)
+    let mut current_timer_guard = state.current_timer.lock().unwrap();
 
-        if *is_running {
-            println!("A timer is already running. Ignoring new request.");
-            return;
+    // take is a method from Option<T> that extracts the Internal Value T, if Option = Some(T), or It returns None instead of the original place from memory
+    match current_timer_guard.take() {
+        Some(handle) => {
+            println!("Aborting previous timer");
+            handle.abort();
         }
-
-        *is_running = true;
+        None => {} // We do nothing
     }
 
-    println!("Timer started for {} seconds", duration_secs);
+    // We print duration
+    println!("timer started for {} seconds", duration_secs);
 
-    tokio::spawn(async move {
-        run_countdown(app_handle, duration_secs).await;
+    // Cloning the app handle as a way to fix ownership issues
+    let app_handle_clone = app_handle.clone(); 
+
+    // Spawn a task for running in the background
+    let handle = tokio::spawn(async move {
+        run_countdown(app_handle_clone, duration_secs).await;
     });
+
+
+    // We put the current_timer_guard as the result of the new handle, so then we have a reference to the task
+    *current_timer_guard = Some(handle);
+
 }
 
 async fn run_countdown(app_handle: AppHandle, duration_secs: i32) {
@@ -45,7 +57,10 @@ async fn run_countdown(app_handle: AppHandle, duration_secs: i32) {
     if valid_duration(&remaining) {
         while valid_duration(&remaining) {
             interval.tick().await;
-            app_handle.emit("timer-tick", remaining).unwrap();
+
+
+            // This checks that it gets an error, it will break
+            if app_handle.emit("timer-tick", remaining).is_err() { break }
             println!("number emitted: {}", remaining);
 
             remaining -= 1;
@@ -55,12 +70,6 @@ async fn run_countdown(app_handle: AppHandle, duration_secs: i32) {
         println!("Timer finished");
         app_handle.emit("timer-done", "times up").unwrap();
 
-        // Here we reset the is_running state
-        {
-            let state = app_handle.state::<CountdownState>();
-            let mut is_running = state.is_running.lock().unwrap();
-            *is_running = false;
-        }
     } else {
         println!("Invalid duration: {}. Timer must be non-negative.", remaining);
         app_handle.emit("timer-tick", "Invalid Duration").unwrap();
@@ -76,7 +85,7 @@ fn valid_duration(r: &i32) -> bool {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
-        .manage(CountdownState {is_running: Mutex::new(false)}) // Initializr in "false"
+        .manage(CountdownState { current_timer: Mutex::new(None)}) 
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![submit, start_timer])
         .run(tauri::generate_context!())

@@ -65,7 +65,7 @@ async function startTimer(timerInputEl, timerMsgEl) {
 export function initializeTimer(formEl, inputEl, msgEl, countdownEl) {
   
   // Setting up the listeners in order to make js listen to the Rust code
-  setupListeners(countdownEl, msgEl);
+  // setupListeners(countdownEl, msgEl);
 
   // Adds the listener to the form
   formEl.addEventListener("submit", (e) => {
