@@ -2,31 +2,56 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styling/styles.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tauri App</title>
     <script type="module" src="/main.js" defer></script>
   </head>
 
   <body>
-    <main class="container">
-        <h1 id="countdown"></h1>
-      
-        <h1>Welcome to zenFocus</h1>
 
-        <form class="row" id="start-timer">
-            <input id="timer-input" placeholder="Enter time in seconds..." />
-            <button id="timer-start" type="submit">Start Timer</button>
-        </form>
-        <p id="timer-msg"></p>
-    </main>
+    <!-- This is the main view. This is what the user is expected to see at first -->
+    <div id="main-view">
+        <button id="settings-button" class="icon-button">⚙️</button>
+        <main class="container">
+            <h1>Welcome to zenFocus</h1>
+
+            <div id="slider-controls">
+                <p>
+                    <span id="selected-duration">1m</span>
+                </p>
+                <input type="range" id="timer-slider" min="60" max="10800" value="60"> 
+            </div>
+
+            <form class="row" id="start-timer">
+                <input id="timer-input" placeholder="Enter time in seconds..." />
+                <button id="timer-start" type="submit">Start Timer</button>
+            </form>
+            <p id="timer-msg"></p>
+        </main>
 
         <div class="testing-purposes">
             <div class="circular-progress">
                 <span class="progress-value">0%</span>
             </div>
-
-            <!-- This is for JavaScript-->
         </div>
+    </div>
+
+
+
+
+
+
+    <!--This is for the settings "page". But in reality it's just hidden...  -->
+    <div id="settings-view">
+        <div class="settings-content">
+            <h2>Ajustes de la aplicacion</h2>
+            <p>Aqui deberia ir la configuracion</p>
+            <button id="back-button">Volver xdxd</button>
+
+
+        </div>
+    </div>
+
   </body>
 </html>

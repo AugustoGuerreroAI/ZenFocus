@@ -1,5 +1,6 @@
 // 1. Imports the module I already created
-import { initializeTimer } from './timer.js';
+import { initializeTimer } from '/js/timer.js';
+import { initializeSwitchListeners } from '/js/switchListen.js'
 
 // 2. Waits until DOM is ready
 window.addEventListener("DOMContentLoaded", () => {
@@ -10,6 +11,12 @@ window.addEventListener("DOMContentLoaded", () => {
   const timerMsgEl = document.querySelector("#timer-msg");
   const countdownEl = document.querySelector("#countdown");
 
-  // 4. Calls the initializer and sends everything, so the logic goes to timer.js 
+
+  // 4. We initialize Switch Listeners!!!
+  initializeSwitchListeners();
+
+  // 7. Calls the initializer and sends everything, so the logic goes to timer.js 
   initializeTimer(timerForm, timerInputEl, timerMsgEl, countdownEl);
 });
+
+

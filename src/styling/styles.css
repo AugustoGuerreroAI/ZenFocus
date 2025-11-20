@@ -1,4 +1,33 @@
 @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Momo+Trust+Display&display=swap');
+@import url('slider.css');
+
+
+#settings-view {
+    position: fixed; /* Fija la posición */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10; /* Asegura que esté encima de todo */
+    padding: 20px;
+    
+    /* Inicialmente OCULTA */
+    display: none; 
+}
+
+
+/* Estilo básico para el botón de la tuerca */
+#settings-button {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 20; /* Asegura que esté visible incluso sobre la vista principal */
+}
+
 
 *{
   font-family: "Momo Trust Display", sans-serif;
